@@ -1,8 +1,8 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://FloatingConsole/FloatingConsole.gd" type="Script" id=1]
+[ext_resource path="res://addons/godot-floating-console/FloatingConsole/FloatingConsole.gd" type="Script" id=1]
 
-[node name="Console" type="Control"]
+[node name="FloatingConsole" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_right = -629.0
@@ -20,17 +20,34 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="LabelHeader" type="Label" parent="VBoxContainer"]
+[node name="HBoxHeader" type="HBoxContainer" parent="VBoxContainer"]
 margin_right = 395.0
-margin_bottom = 14.0
+margin_bottom = 20.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxHeader"]
+margin_top = 3.0
+margin_right = 359.0
+margin_bottom = 17.0
 mouse_filter = 0
 mouse_default_cursor_shape = 6
-text = "ECS console"
+size_flags_horizontal = 3
+text = "Floating Console"
+
+[node name="Button" type="Button" parent="VBoxContainer/HBoxHeader"]
+margin_left = 363.0
+margin_right = 395.0
+margin_bottom = 20.0
+focus_mode = 0
+enabled_focus_mode = 0
+text = "> <"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer"]
-margin_top = 18.0
+margin_top = 24.0
 margin_right = 395.0
-margin_bottom = 118.0
+margin_bottom = 124.0
 rect_min_size = Vector2( 0, 100 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -45,18 +62,18 @@ text = "
 
 "
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_top = 122.0
+[node name="HBoxInput" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 128.0
 margin_right = 395.0
-margin_bottom = 146.0
+margin_bottom = 152.0
 
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+[node name="Label" type="Label" parent="VBoxContainer/HBoxInput"]
 margin_top = 5.0
 margin_right = 12.0
 margin_bottom = 19.0
 text = "> "
 
-[node name="LineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/HBoxInput"]
 margin_left = 16.0
 margin_right = 395.0
 margin_bottom = 24.0
@@ -65,14 +82,15 @@ text = "COMMAND"
 caret_blink = true
 
 [node name="ColorRect" type="ColorRect" parent="."]
-margin_left = 390.0
-margin_top = 141.0
-margin_right = 399.0
-margin_bottom = 150.0
+margin_left = 385.517
+margin_top = 142.281
+margin_right = 394.517
+margin_bottom = 151.281
 mouse_default_cursor_shape = 12
 __meta__ = {
 "_edit_use_anchors_": false
 }
-[connection signal="gui_input" from="VBoxContainer/LabelHeader" to="." method="_on_LabelHeader_gui_input"]
-[connection signal="text_entered" from="VBoxContainer/HBoxContainer/LineEdit" to="." method="_on_LineEdit_text_entered"]
+[connection signal="gui_input" from="VBoxContainer/HBoxHeader/Label" to="." method="_on_LabelHeader_gui_input"]
+[connection signal="button_up" from="VBoxContainer/HBoxHeader/Button" to="." method="_on_ButtonMin_button_up"]
+[connection signal="text_entered" from="VBoxContainer/HBoxInput/LineEdit" to="." method="_on_LineEdit_text_entered"]
 [connection signal="gui_input" from="ColorRect" to="." method="_on_ColorRect_gui_input"]
