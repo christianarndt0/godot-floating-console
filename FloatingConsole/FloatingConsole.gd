@@ -7,6 +7,7 @@ signal input_err
 
 export var CMD_HISTORY_LENGTH = 10
 export var RES_HISTORY_LENGTH = 10
+export var HISTORY_SAVE_PATH = "user://floating_console.json"
 export var MAX_OUTPUT_LENGTH = 1000
 export var RESIZE_ICON_OFFSET = Vector2(-10, 41)
 export var COMMAND_PATTERN = "^CMD\\s.*"
@@ -39,6 +40,7 @@ func write(msg: String, add_to_history=true):
 	var txt = " " + msg + "\n"
 	if add_to_history:
 		_response_history.append(msg)
+		_save_histories()
 		txt = OUTPUT_PREFIX + txt
 	else:
 		txt = INPUT_PREFIX + txt
@@ -97,9 +99,12 @@ func get_history_index() -> int:
 
 
 # built-in functions
+
 func _ready():
 	_regex = RegEx.new()
 	_regex.compile(COMMAND_PATTERN)
+	
+	_load_histories()
 
 
 func _input(event):
@@ -126,6 +131,32 @@ func _input(event):
 
 
 # private functions
+
+func _load_histories():
+	# load histories from json file
+	var file = File.new()
+	if file.open(HISTORY_SAVE_PATH, File.READ) != OK:
+		return
+	var txt = file.get_as_text()
+	file.close()
+	
+	# convert entity json to dictionary
+	var res = JSON.parse(txt)
+	if res.error == OK:
+		_command_history = res.result[String(CMD_HISTORY)]
+		_response_history = res.result[String(RES_HISTORY)]
+	
+
+func _save_histories():
+	# serialize histories
+	var data = {CMD_HISTORY: _command_history, RES_HISTORY: _response_history}
+	data = JSON.print(data)
+	# write to file
+	var file = File.new()
+	file.open(HISTORY_SAVE_PATH, File.WRITE)
+	file.store_string(data)
+	file.close()
+
 
 func _parse_command(cmd: String):
 	_command_history.append(cmd)
